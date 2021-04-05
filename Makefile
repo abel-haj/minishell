@@ -1,6 +1,8 @@
-NAME	= minishell.a
+NAME	= minishell
 
-SRCS	= main.c
+SRCS	= main.c \
+		./gnl/get_next_line_utils.c ./gnl/get_next_line.c
+
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -11,13 +13,15 @@ all		: $(NAME)
 $(NAME)	:
 	make -C ./libft/
 	make clean -C ./libft/
-	make -C ./gnl/
-	make clean -C ./gnl/
-	gcc -s $(SRCS)
-	ar rc $(NAME) $(OBJS)
+
+	gcc $(SRCS) ./libft/libft.a -o $(NAME)
 
 clean	:
+	rm -r *.o
+	make clean -C ./libft
 
 fclean	: clean
+	rm -r $(NAME)
+	make fclean -C ./libft
 
 re		: fclean all
