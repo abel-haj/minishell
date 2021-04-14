@@ -17,11 +17,11 @@ $(NAME)	:
 	gcc $(SRCS) ./libft/libft.a -o $(NAME)
 
 clean	:
-	rm -r *.o
+	rm -rf *.o
 	make clean -C ./libft
 
 fclean	: clean
-	rm -r $(NAME)
+	rm -rf $(NAME)
 	make fclean -C ./libft
 
 re		: fclean all
