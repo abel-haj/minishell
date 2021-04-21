@@ -50,11 +50,26 @@ int		ft_strcmp( char *s1,  char *s2)
 	return (0);
 }
 
+size_t		ft_strrindof(char *s, char c)
+{
+	size_t	i;
+
+	i = ft_strlen(s);
+	while (i >= 0)
+	{
+		if (s[i] == c)
+			return (i);
+		i--;
+	}
+	return (i);
+}
+
 void		ft_which_command(char *cmd)
 {
 	char	**options;
 	size_t	c;
 	size_t	i;
+	size_t	indx;
 	int		fd;
 
 	options = ft_split(cmd, ' ');
@@ -88,7 +103,11 @@ void		ft_which_command(char *cmd)
 		}
 	}
 	else if (ft_strcmp(options[0], "echo") == 0)
-	{}
+	{
+		printf("%s\n", cmd);
+		// single quotes
+		// double quotes
+	}
 	else if (ft_strcmp(options[0], "env") == 0)
 	{}
 	else if (ft_strcmp(options[0], "exit") == 0)
@@ -150,7 +169,8 @@ int			main(int argc, char *argv[])
 	// char	*exargs[] = {"/", NULL};
 
 	// execve("/bin/ls", exargs, NULL);
-	while (get_next_line(0, &line) >= 0)
+
+	while (write(1, "$ ", 2) && get_next_line(0, &line) >= 0)
 	{
 		// printf("%s\n", line);
 		ft_treat_line(line);

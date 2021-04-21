@@ -1,6 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
 
+size_t	ft_strlen(char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
+}
+
 int	main(int argc, char *argv[])
 {
 	char	a[10];
@@ -11,7 +23,7 @@ int	main(int argc, char *argv[])
 	while (ret > 0)
 	{
 		ret = read(1, &a, 9);
-		printf("%s\n", a);
+		printf("%d\n", ft_strlen(a));
 	}
 	return (0);
 }
