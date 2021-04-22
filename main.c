@@ -1,5 +1,15 @@
 #include "minishell.h"
 
+void		ft_putsentence(char *s1, char *s2, char *s3)
+{
+	if (s1)
+		ft_putstr(s1);
+	if (s2)
+		ft_putstr(s2);
+	if (s3)
+		ft_putstr(s3);
+}
+
 size_t		ft_countsplit(const char *s, char c)
 {
 	size_t	i;
@@ -83,7 +93,8 @@ void		ft_which_command(char *cmd)
 		{
 			fd = open(options[1], O_RDONLY);
 			if (fd == -1)
-				printf("cd: %s: No such file or directory\n", options[1]);
+				// printf("cd: %s: No such file or directory\n", options[1]);
+				ft_putsentence("cd: ", options[1], ": No such file or directory\n");
 			else
 			{
 				close(fd);
@@ -94,37 +105,71 @@ void		ft_which_command(char *cmd)
 				}
 				else
 				{
-					printf("cd: %s: Not a directory\n", options[1]);
+					// printf("cd: %s: Not a directory\n", options[1]);
+					ft_putsentence("cd: ", options[1], ": Not a directory\n");
 				}
 			}
 			// struct stat b;
 			// stat(options[1], &b);
-			
 		}
 	}
 	else if (ft_strcmp(options[0], "echo") == 0)
 	{
-		printf("%s\n", cmd);
 		// single quotes
 		// double quotes
+
+		// get printable part of line
+		// remove parent quotes
+		if (c >= 2)
+		{
+			// -n
+			if (ft_strcmp(options[1], "-n") == 0)
+			{
+				i = 2;
+				while (i < c)
+				{
+					if (i > 2)
+						ft_putchar(' ');
+					// printf("%s", options[i]);
+					ft_putstr(options[i]);
+					i++;
+				}
+			}
+			else
+			{
+				i = 1;
+				while (i < c)
+				{
+					if (i > 1)
+						ft_putchar(' ');
+					// printf("%s", options[i]);
+					ft_putstr(options[i]);
+					i++;
+				}
+				ft_putchar('\n');
+			}
+		}
 	}
 	else if (ft_strcmp(options[0], "env") == 0)
 	{}
 	else if (ft_strcmp(options[0], "exit") == 0)
 	{
 		// free n quit
+		exit(0);
 	}
 	else if (ft_strcmp(options[0], "export") == 0)
 	{}
 	else if (ft_strcmp(options[0], "pwd") == 0)
 	{
-		printf("%s\n", getcwd(NULL, 0));
+		// printf("%s\n", getcwd(NULL, 0));
+		ft_putsentence(getcwd(NULL, 0), "\n", NULL);
 	}
 	else if (ft_strcmp(options[0], "unset") == 0)
 	{}
 	else
 	{
-		printf("%s: command was not found\n", options[0]);
+		// printf("%s: command was not found\n", options[0]);
+		ft_putsentence(options[0], ": command was not found\n", NULL);
 	}
 }
 
@@ -153,7 +198,8 @@ void		ft_treat_line(char *line)
 	else if (ft_strlen(line) >= 1)
 	{
 		// Ex: ";"
-		printf("syntax error\n");
+		// printf("syntax error\n");
+		ft_putstr("syntax error\n");
 	}
 	// printf("\n%zu\n", c);
 
