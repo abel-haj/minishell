@@ -1,0 +1,20 @@
+ECHO
+	Quotes
+CD
+	Varibales
+	Quotes
+EXIT
+	Free
+
+ENV
+EXPORT
+UNSET
+
+PWD
+	Done
+
+
+'get me'  ham
+ get me   ham
+
+
