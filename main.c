@@ -74,18 +74,48 @@ size_t		ft_strrindof(char *s, char c)
 	return (i);
 }
 
+char		*ft_concat(char *str, char c)
+{
+	char	*n_str;
+	char	*tmp;
+	size_t	len;
+	size_t	i;
+
+	if ((int)c < 0)
+		return (str);
+	if (str == NULL)
+		len = 0;
+	else
+		len = ft_strlen(str);
+
+	n_str = malloc(len + 2);
+
+	ft_strcpy(n_str, str);
+	n_str[len] = c;
+	n_str[len + 1] = '\0';
+
+	return (n_str);
+}
+
+char		ft_lastchr(char *str)
+{
+	size_t	i;
+
+	if (str == NULL)
+		return (0);
+	i = ft_strlen(str);
+	return (str[i - 1]);
+}
+
+// LEAKS
 char		*ft_cleanstr(char *str)
 {
 	char	*new_s;
 	int		w_quote;
-	int		s_quote;
-	int		d_quote;
 	size_t	i;
 
 	new_s = NULL;
 	w_quote = 0;
-	s_quote = 0;
-	d_quote = 0;
 	i = 0;
 
 /*
@@ -96,14 +126,55 @@ char		*ft_cleanstr(char *str)
 */
 	while (str[i])
 	{
-		if (str[i] == )
+		if (str[i] == '\'')
+		{
+			if (w_quote == 0)
+			{
+				w_quote = 1;
+			}
+			else if (w_quote == 1)
+			{
+				w_quote = 0;
+			}
+			else if (w_quote == 2)
+			{
+				new_s = ft_concat(new_s, str[i]);
+			}
+		}
+		else if (str[i] == '"')
+		{
+			if (w_quote == 0)
+			{
+				w_quote = 2;
+			}
+			else if (w_quote == 1)
+			{
+				new_s = ft_concat(new_s, str[i]);
+			}
+			else if (w_quote == 2)
+			{
+				w_quote = 0;
+			}
+		}
+		else
+		{
+			if (str[i] == ' ' && (w_quote == 1 || w_quote == 2))
+			{
+				if (ft_lastchr(new_s) != ' ')
+					new_s = ft_concat(new_s, str[i]);
+			}
+			else
+				new_s = ft_concat(new_s, str[i]);
+		}
 		i++;
 	}
+	return (new_s);
 }
 
 void		ft_which_command(char *cmd)
 {
 	char	**options;
+	char	*tmp;
 	size_t	c;
 	size_t	i;
 	size_t	indx;
@@ -112,6 +183,11 @@ void		ft_which_command(char *cmd)
 	options = ft_split(cmd, ' ');
 	c = ft_countsplit(cmd, ' ');
 
+	// split spaces
+	// or
+	// skip command
+	// or
+	// both
 	if (ft_strcmp(options[0], "cd") == 0)
 	{
 		// variables
@@ -120,6 +196,13 @@ void		ft_which_command(char *cmd)
 		// if none, do nothing
 		if (c >= 2)
 		{
+			tmp = options[1];
+			// remove outer quotes
+			options[1] = ft_cleanstr(options[1]);
+			free(tmp);
+
+			// printf("\n%s\n", options[1]);
+
 			fd = open(options[1], O_RDONLY);
 			if (fd == -1)
 				// printf("cd: %s: No such file or directory\n", options[1]);
@@ -129,9 +212,10 @@ void		ft_which_command(char *cmd)
 				close(fd);
 				if (ft_isdir(options[1]))
 				{
-					options[1] = ft_cleanstr(options[1]);
+
 					chdir(options[1]);
 				}
+
 				else
 				{
 					// printf("cd: %s: Not a directory\n", options[1]);
@@ -150,7 +234,6 @@ void		ft_which_command(char *cmd)
 		// variables
 
 		// get printable part of line
-		// remove parent quotes
 		if (c >= 2)
 		{
 			// -n
