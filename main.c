@@ -74,6 +74,33 @@ size_t		ft_strrindof(char *s, char c)
 	return (i);
 }
 
+char		*ft_cleanstr(char *str)
+{
+	char	*new_s;
+	int		w_quote;
+	int		s_quote;
+	int		d_quote;
+	size_t	i;
+
+	new_s = NULL;
+	w_quote = 0;
+	s_quote = 0;
+	d_quote = 0;
+	i = 0;
+
+/*
+''""
+	0 = none
+	' = 1
+	" = 2
+*/
+	while (str[i])
+	{
+		if (str[i] == )
+		i++;
+	}
+}
+
 void		ft_which_command(char *cmd)
 {
 	char	**options;
@@ -87,6 +114,8 @@ void		ft_which_command(char *cmd)
 
 	if (ft_strcmp(options[0], "cd") == 0)
 	{
+		// variables
+
 		// check only first path
 		// if none, do nothing
 		if (c >= 2)
@@ -100,8 +129,8 @@ void		ft_which_command(char *cmd)
 				close(fd);
 				if (ft_isdir(options[1]))
 				{
+					options[1] = ft_cleanstr(options[1]);
 					chdir(options[1]);
-
 				}
 				else
 				{
@@ -113,10 +142,12 @@ void		ft_which_command(char *cmd)
 			// stat(options[1], &b);
 		}
 	}
+
 	else if (ft_strcmp(options[0], "echo") == 0)
 	{
 		// single quotes
 		// double quotes
+		// variables
 
 		// get printable part of line
 		// remove parent quotes
@@ -135,6 +166,7 @@ void		ft_which_command(char *cmd)
 					i++;
 				}
 			}
+
 			else
 			{
 				i = 1;
@@ -150,22 +182,28 @@ void		ft_which_command(char *cmd)
 			}
 		}
 	}
+
 	else if (ft_strcmp(options[0], "env") == 0)
 	{}
+
 	else if (ft_strcmp(options[0], "exit") == 0)
 	{
 		// free n quit
 		exit(0);
 	}
+
 	else if (ft_strcmp(options[0], "export") == 0)
 	{}
+
 	else if (ft_strcmp(options[0], "pwd") == 0)
 	{
 		// printf("%s\n", getcwd(NULL, 0));
 		ft_putsentence(getcwd(NULL, 0), "\n", NULL);
 	}
+
 	else if (ft_strcmp(options[0], "unset") == 0)
 	{}
+
 	else
 	{
 		// printf("%s: command was not found\n", options[0]);
