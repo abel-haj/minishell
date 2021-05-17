@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void		ft_putsentence(char *s1, char *s2, char *s3)
+void	ft_putsentence(char *s1, char *s2, char *s3)
 {
 	if (s1)
 		ft_putstr(s1);
@@ -10,7 +10,7 @@ void		ft_putsentence(char *s1, char *s2, char *s3)
 		ft_putstr(s3);
 }
 
-size_t		ft_countsplit(const char *s, char c)
+size_t	ft_countsplit(const char *s, char c)
 {
 	size_t	i;
 	size_t	j;
@@ -29,18 +29,23 @@ size_t		ft_countsplit(const char *s, char c)
 	return (j);
 }
 
-int			ft_isdir(char *dirpath)
+int	ft_isdir(char *dirpath)
 {
-	DIR		*dir = opendir(dirpath);
-	if (dir) {
+	DIR		*dir;
+
+	dir = opendir(dirpath);
+	if (dir)
+	{
 		closedir(dir);
 		return (1);
-	} else {
+	}
+	else
+	{
 		return (0);
 	}
 }
 
-int		ft_strcmp( char *s1,  char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	size_t			i;
 	unsigned char	*f_string;
@@ -60,7 +65,7 @@ int		ft_strcmp( char *s1,  char *s2)
 	return (0);
 }
 
-size_t		ft_strrindof(char *s, char c)
+size_t	ft_strrindof(char *s, char c)
 {
 	size_t	i;
 
@@ -74,7 +79,7 @@ size_t		ft_strrindof(char *s, char c)
 	return (i);
 }
 
-char		*ft_concat(char *str, char c)
+char	*ft_concat(char *str, char c)
 {
 	char	*n_str;
 	char	*tmp;
@@ -97,7 +102,7 @@ char		*ft_concat(char *str, char c)
 	return (n_str);
 }
 
-char		ft_lastchr(char *str)
+char	ft_lastchr(char *str)
 {
 	size_t	i;
 
@@ -108,7 +113,7 @@ char		ft_lastchr(char *str)
 }
 
 // LEAKS
-char		*ft_cleanstr(char *str)
+char	*ft_cleanstr(char *str)
 {
 	char	*new_s;
 	int		w_quote;
@@ -171,7 +176,7 @@ char		*ft_cleanstr(char *str)
 	return (new_s);
 }
 
-void		ft_which_command(char *cmd)
+void	ft_which_command(char *cmd)
 {
 	char	**options;
 	char	*tmp;
@@ -294,7 +299,7 @@ void		ft_which_command(char *cmd)
 	}
 }
 
-void		ft_treat_line(char *line)
+void	ft_treat_line(char *line)
 {
 	char	**cmds;
 	size_t	c;
@@ -327,7 +332,7 @@ void		ft_treat_line(char *line)
 	// split pipes
 }
 
-int			main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	char	*line;
 	// char	**exargs;
