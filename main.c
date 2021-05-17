@@ -81,7 +81,7 @@ size_t	ft_strrindof(char *s, char c)
 
 char	*ft_concat(char *str, char c)
 {
-	char	*n_str;
+	char	*new_str;
 	char	*tmp;
 	size_t	len;
 	size_t	i;
@@ -93,13 +93,13 @@ char	*ft_concat(char *str, char c)
 	else
 		len = ft_strlen(str);
 
-	n_str = malloc(len + 2);
+	new_str = malloc(len + 2);
 
-	ft_strcpy(n_str, str);
-	n_str[len] = c;
-	n_str[len + 1] = '\0';
+	ft_strcpy(new_str, str);
+	new_str[len] = c;
+	new_str[len + 1] = '\0';
 
-	return (n_str);
+	return (new_str);
 }
 
 char	ft_lastchr(char *str)
@@ -110,70 +110,6 @@ char	ft_lastchr(char *str)
 		return (0);
 	i = ft_strlen(str);
 	return (str[i - 1]);
-}
-
-// LEAKS
-char	*ft_cleanstr(char *str)
-{
-	char	*new_s;
-	int		w_quote;
-	size_t	i;
-
-	new_s = NULL;
-	w_quote = 0;
-	i = 0;
-
-/*
-''""
-	0 = none
-	' = 1
-	" = 2
-*/
-	while (str[i])
-	{
-		if (str[i] == '\'')
-		{
-			if (w_quote == 0)
-			{
-				w_quote = 1;
-			}
-			else if (w_quote == 1)
-			{
-				w_quote = 0;
-			}
-			else if (w_quote == 2)
-			{
-				new_s = ft_concat(new_s, str[i]);
-			}
-		}
-		else if (str[i] == '"')
-		{
-			if (w_quote == 0)
-			{
-				w_quote = 2;
-			}
-			else if (w_quote == 1)
-			{
-				new_s = ft_concat(new_s, str[i]);
-			}
-			else if (w_quote == 2)
-			{
-				w_quote = 0;
-			}
-		}
-		else
-		{
-			if (str[i] == ' ' && (w_quote == 1 || w_quote == 2))
-			{
-				if (ft_lastchr(new_s) != ' ')
-					new_s = ft_concat(new_s, str[i]);
-			}
-			else
-				new_s = ft_concat(new_s, str[i]);
-		}
-		i++;
-	}
-	return (new_s);
 }
 
 void	ft_which_command(char *cmd)
@@ -188,11 +124,6 @@ void	ft_which_command(char *cmd)
 	options = ft_split(cmd, ' ');
 	c = ft_countsplit(cmd, ' ');
 
-	// split spaces
-	// or
-	// skip command
-	// or
-	// both
 	if (ft_strcmp(options[0], "cd") == 0)
 	{
 		// variables
@@ -299,6 +230,51 @@ void	ft_which_command(char *cmd)
 	}
 }
 
+void	ft_extract_data(char *command)
+{
+	t_cmd	cmd;
+	char	*new_str
+	size_t	b;
+	size_t	i;
+	int		q;
+
+	new_str = NULL;
+	i = 0;
+	q = 0;
+	while (command[i] == ' ' && str[i])
+		i++;
+	b = i;
+
+	while (str[i])
+	{
+		if (str[i] == '\'')
+		{
+			if (q == 0)
+				q = 1;
+			if (q == 1)
+				q = 0;
+			if (q == 2)
+				q = q;
+		}
+		else if (str[i] == '\"')
+		{
+		{
+			if (q == 0)
+				q = 2;
+			if (q == 1)
+				q = q;
+			if (q == 2)
+				q = 0;
+		}
+		if (str[i] == ' ' && q == 0)
+		{
+			break;
+		}
+		i++;
+	}
+
+}
+
 void	ft_treat_line(char *line)
 {
 	char	**cmds;
@@ -317,7 +293,7 @@ void	ft_treat_line(char *line)
 		i = 0;
 		while (i < c)
 		{
-			ft_which_command(cmds[i]);
+			ft_extract_data(cmds[i]);
 			i++;
 		}
 	}
