@@ -11,6 +11,12 @@
 
 # include <dirent.h>
 
+typedef struct s_cmd {
+	char		*cmd;
+	char		*option;
+	char		**arguments;
+}				t_cmd;
+
 int		get_next_line(int fd, char **line);
 
 #endif
