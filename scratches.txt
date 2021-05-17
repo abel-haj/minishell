@@ -17,4 +17,17 @@ PWD
 'get me'  ham
  get me   ham
 
+'echo' 'echo'
+'echo ' echo
+'echo' 'e  cho'
+
+s.cmd			first word
+
+s.option		if [0] is '-'
+					second word
+
+s.argument		if s.option is not null
+					third+ word
+				else
+					second+ word
 
