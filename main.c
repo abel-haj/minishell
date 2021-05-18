@@ -112,6 +112,60 @@ char	ft_lastchr(char *str)
 	return (str[i - 1]);
 }
 
+char	*ft_cleanstr(char *str)
+{
+	char	*new_str;
+	int		w_quote;
+	size_t	i;
+
+	new_str = NULL;
+	w_quote = 0;
+	i = 0;
+
+/*
+''""
+	0 = none
+	' = 1
+	" = 2
+*/
+	while (str[i])
+	{
+		if (str[i] == '\'')
+		{
+			if (w_quote == 0)
+				w_quote = 1;
+			else if (w_quote == 1)
+				w_quote = 0;
+			else if (w_quote == 2)
+				new_str = ft_concat(new_str, str[i]);
+		}
+		else if (str[i] == '"')
+		{
+			if (w_quote == 0)
+				w_quote = 2;
+			else if (w_quote == 1)
+				new_str = ft_concat(new_str, str[i]);
+			else if (w_quote == 2)
+				w_quote = 0;
+		}
+		else
+		{
+			if (str[i] == ' ')
+			{
+				if (w_quote == 1 || w_quote == 2)
+					new_str = ft_concat(new_str, str[i]);
+				else
+					if (ft_lastchr(new_str) != ' ')
+						new_str = ft_concat(new_str, str[i]);
+			}
+			else
+				new_str = ft_concat(new_str, str[i]);
+		}
+		i++;
+	}
+	return (new_str);
+}
+
 void	ft_which_command(char *cmd)
 {
 	char	**options;
@@ -233,7 +287,7 @@ void	ft_which_command(char *cmd)
 void	ft_extract_data(char *command)
 {
 	t_cmd	cmd;
-	char	*new_str
+	char	*new_str;
 	size_t	b;
 	size_t	i;
 	int		q;
@@ -241,38 +295,45 @@ void	ft_extract_data(char *command)
 	new_str = NULL;
 	i = 0;
 	q = 0;
-	while (command[i] == ' ' && str[i])
+	while (command[i] == ' ' && command[i])
 		i++;
 	b = i;
 
-	while (str[i])
+	while (command[i])
 	{
-		if (str[i] == '\'')
+		if (command[i] == '\'')
 		{
 			if (q == 0)
 				q = 1;
-			if (q == 1)
+			else if (q == 1)
 				q = 0;
-			if (q == 2)
-				q = q;
+			// else if (q == 2)
+			// 	q = q;
 		}
-		else if (str[i] == '\"')
-		{
+		else if (command[i] == '\"')
 		{
 			if (q == 0)
 				q = 2;
-			if (q == 1)
-				q = q;
-			if (q == 2)
+			// else if (q == 1)
+			// 	q = q;
+			else if (q == 2)
 				q = 0;
 		}
-		if (str[i] == ' ' && q == 0)
+		else
 		{
-			break;
+			if (command[i] == ' ')
+			{
+				if (q == 0)
+					break;
+			}
+			// else
+			// {
+
+			// }
 		}
 		i++;
 	}
-
+	printf("|%s|\n", ft_cleanstr(ft_substr(command, b, i - b)));
 }
 
 void	ft_treat_line(char *line)
@@ -294,6 +355,8 @@ void	ft_treat_line(char *line)
 		while (i < c)
 		{
 			ft_extract_data(cmds[i]);
+			// execute command
+			// wait command
 			i++;
 		}
 	}
