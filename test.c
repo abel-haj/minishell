@@ -58,39 +58,30 @@ char	*ft_cleanstr(char *str)
 		if (str[i] == '\'')
 		{
 			if (w_quote == 0)
-			{
 				w_quote = 1;
-			}
 			else if (w_quote == 1)
-			{
 				w_quote = 0;
-			}
 			else if (w_quote == 2)
-			{
 				new_str = ft_concat(new_str, str[i]);
-			}
 		}
 		else if (str[i] == '"')
 		{
 			if (w_quote == 0)
-			{
 				w_quote = 2;
-			}
 			else if (w_quote == 1)
-			{
 				new_str = ft_concat(new_str, str[i]);
-			}
 			else if (w_quote == 2)
-			{
 				w_quote = 0;
-			}
 		}
 		else
 		{
-			if (str[i] == ' ' && (w_quote == 1 || w_quote == 2))
+			if (str[i] == ' ')
 			{
-				if (ft_lastchr(new_str) != ' ')
+				if (w_quote == 1 || w_quote == 2)
 					new_str = ft_concat(new_str, str[i]);
+				else
+					if (ft_lastchr(new_str) != ' ')
+						new_str = ft_concat(new_str, str[i]);
 			}
 			else
 				new_str = ft_concat(new_str, str[i]);
@@ -114,6 +105,6 @@ int		main()
 	// getchar();
 	// "str"
 
-	printf("|%s|", ft_cleanstr("\'str    str    str\'"));
+	printf("|%s|", ft_cleanstr("    \'str str    str\' \"|   |\"    "));
 	return 0;
 }
