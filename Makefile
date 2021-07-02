@@ -6,7 +6,7 @@ SRCS	= main.c \
 
 OBJS	= $(SRCS:.c=.o)
 
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g
 
 all		: $(NAME)
 
