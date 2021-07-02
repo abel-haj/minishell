@@ -31,3 +31,43 @@ s.argument		if s.option is not null
 				else
 					second+ word
 
+
+[0, 1, 2, null] + 3
+
+[ ,  ,  ,  , null]
+
+
+
+len = 1
+NULL
+
+
+opt = malloc len + 1
+opt1 = *1 (new)
+opt2 = NULL
+len+
+
+[*1, NULL]
+
+
+opt = malloc len + 1
+opt1 = *1
+opt2 = *2 (new)
+opt3 = NULL
+len+
+
+[*1, NULL] + *2
+[*1, *2, NULL]
+
+
+
+opt = malloc len + 1
+opt1 = *1
+opt2 = *2
+opt3 = *3 (new)
+opt4 = NULL
+len+
+
+
+
+
