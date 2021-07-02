@@ -284,96 +284,164 @@ void	ft_which_command(char *cmd)
 	}
 }
 
-void	ft_extract_data(char *command)
+// t_cmd	*init_cmd(void)
+// {
+// 	return ((t_cmd *) {NULL, NULL, NULL, 2});
+// }
+
+t_cmd	*ft_extract_data(char *command)
 {
-	t_cmd	cmd;
-	char	*new_str;
+	t_cmd	*cmd;
+	char	*tmp;
+	char	**tmp2;
 	size_t	b;
 	size_t	i;
+	size_t	j;
 	int		q;
+	int		opt_len = 0;
+	int		arg_len = 0;
 
-	new_str = NULL;
+	tmp = NULL;
 	i = 0;
 	q = 0;
-	while (command[i] == ' ' && command[i])
-		i++;
-	b = i;
+	cmd = malloc(sizeof(t_cmd *));
+	cmd->cmd = NULL;
+	cmd->arguments = NULL;
+	cmd->options = NULL;
 
 	while (command[i])
 	{
-		if (command[i] == '\'')
+
+		while (command[i] == ' ' && command[i])
+			i++;
+		b = i;
+
+		while (command[i])
 		{
-			if (q == 0)
-				q = 1;
-			else if (q == 1)
-				q = 0;
-			// else if (q == 2)
-			// 	q = q;
+			if (command[i] == '\'')
+			{
+				if (q == 0)
+					q = 1;
+				else if (q == 1)
+					q = 0;
+			}
+			else if (command[i] == '\"')
+			{
+				if (q == 0)
+					q = 2;
+				else if (q == 2)
+					q = 0;
+			}
+			else
+			{
+				if (command[i] == ' ')
+				{
+					if (q == 0)
+						break;
+				}
+			}
+			i++;
 		}
-		else if (command[i] == '\"')
+
+		tmp = ft_cleanstr(ft_substr(command, b, i - b));
+
+		if (cmd->cmd == NULL)
 		{
-			if (q == 0)
-				q = 2;
-			// else if (q == 1)
-			// 	q = q;
-			else if (q == 2)
-				q = 0;
+			cmd->cmd = tmp;
+			printf("found cmd\n");
+		}
+		else if (tmp[0] == '-')
+		{
+			j = 0;
+			opt_len++;
+			tmp2 = cmd->options;
+			cmd->options = malloc(sizeof(char *) * opt_len + 1);
+			while (j < opt_len - 1)
+			{
+				cmd->options[j] = ft_strdup(tmp2[j]);
+				j++;
+			}
+			cmd->options[j] = ft_strdup(tmp);
+			j++;
+			cmd->options[j] = NULL;
+			printf("found opt\n");
+			if (tmp2)
+				free(tmp2);
+			free(tmp);
 		}
 		else
 		{
-			if (command[i] == ' ')
+			j = 0;
+			arg_len++;
+			tmp2 = cmd->arguments;
+			cmd->arguments = malloc(sizeof(char *) * arg_len + 1);
+			// 0 < 1
+			while (j < arg_len - 1)
 			{
-				if (q == 0)
-					break;
+				cmd->arguments[j] = ft_strdup(tmp2[j]);
+				j++;
 			}
-			// else
-			// {
-
-			// }
+			cmd->arguments[j] = ft_strdup(tmp);
+			j++;
+			cmd->arguments[j] = NULL;
+			printf("found arg\n");
+			if (tmp2)
+				free(tmp2);
+			free(tmp);
 		}
+
 		i++;
 	}
-	printf("|%s|\n", ft_cleanstr(ft_substr(command, b, i - b)));
+
+	i = 0;
+	while (cmd->options && cmd->options[i])
+	{
+		printf("option : %s\n", cmd->options[i]);
+		i++;
+	}
+	i = 0;
+	while (cmd->arguments && cmd->arguments[i])
+	{
+		printf("argument : %s\n", cmd->arguments[i]);
+		i++;
+	}
+	return (cmd);
 }
 
+/*
 void	ft_treat_line(char *line)
 {
 	char	**cmds;
 	size_t	c;
 	size_t	i;
+	t_cmd	cmd;
 
-	// split commands
-	cmds = ft_split(line, ';');
-	c = ft_countsplit(line, ';');
+	cmds = ft_split(line, '|');
+	c = ft_countsplit(line, '|');
 
 	if (c >= 1)
 	{
 		// 1 command
-		// could contain '>' or '|'
+		// could contain '>' or '>>'
 
 		i = 0;
 		while (i < c)
 		{
-			ft_extract_data(cmds[i]);
-			// execute command
-			// wait command
+			cmd = ft_extract_data(cmds[i]);
+
 			i++;
 		}
 	}
-	else if (ft_strlen(line) >= 1)
-	{
-		// Ex: ";"
-		// printf("syntax error\n");
-		ft_putstr("syntax error\n");
-	}
-	// printf("\n%zu\n", c);
 
-	// split pipes
+	
 }
+*/
 
 int	main(int argc, char *argv[])
 {
 	char	*line;
+	t_cmd	*cmd;
+	int		i;
 	// char	**exargs;
 	// **exargs = {"/", NULL};
 
@@ -383,8 +451,16 @@ int	main(int argc, char *argv[])
 
 	while (write(1, "$ ", 2) && get_next_line(0, &line) >= 0)
 	{
-		// printf("%s\n", line);
-		ft_treat_line(line);
+		// ft_treat_line(line);
+		cmd = ft_extract_data(line);
+		printf("cmd\t : %s\n", cmd->cmd);
+
+
+		// for (int i=0; cmd->options[i]; i++)
+		// {
+		// 	printf("option : %s\n", cmd->options[i]);
+		// }
+
 		free(line);
 	}
 	return (0);
