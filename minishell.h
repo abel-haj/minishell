@@ -13,8 +13,9 @@
 
 typedef struct s_cmd {
 	char		*cmd;
-	char		*option;
+	char		**options; // [*1, *2, *3, NULL]
 	char		**arguments;
+	char		is_builtin; // 0 OR 1
 }				t_cmd;
 
 int		get_next_line(int fd, char **line);
