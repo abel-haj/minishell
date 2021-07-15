@@ -305,6 +305,11 @@ t_cmd	*ft_extract_data(char *command)
 	i = 0;
 	q = 0;
 	cmd = malloc(sizeof(t_cmd *));
+
+	// malloc protection
+	if (!cmd)
+		return (NULL);
+
 	cmd->cmd = NULL;
 	cmd->arguments = NULL;
 	cmd->options = NULL;
@@ -343,14 +348,45 @@ t_cmd	*ft_extract_data(char *command)
 			i++;
 		}
 
+		// TRYING TO PROTECT MALLOC
+		// NEED TO REWRITE LOGIC
+
 		tmp = ft_cleanstr(ft_substr(command, b, i - b));
+
+		// malloc protection
+		if (!tmp)
+		{
+			// free n get out
+			if (cmd)
+			{
+				if (cmd->cmd)
+					free(cmd->cmd);
+				if (cmd->arguments)
+				{
+					j = 0;
+					while (cmd->arguments[j])
+						free(cmd->arguments[j++]);
+				}
+				if (cmd->options)
+				{
+					j = 0;
+					while (cmd->options[j])
+						free(cmd->options[j++]);
+				}
+			}
+			return (NULL);
+		}
+		// if (!tmp)
+		// {
+		// 	// malloc failed
+		// }
 
 		if (cmd->cmd == NULL)
 		{
 			cmd->cmd = tmp;
 			printf("found cmd\n");
 		}
-		else if (tmp[0] == '-')
+		else if (tmp[0] == '-' && cmd->arguments == NULL)
 		{
 			j = 0;
 			opt_len++;
@@ -385,24 +421,11 @@ t_cmd	*ft_extract_data(char *command)
 			j++;
 			cmd->arguments[j] = NULL;
 			printf("found arg\n");
-			if (tmp2)
-				free(tmp2);
-			free(tmp);
+			// if (tmp2)
+			// 	free(tmp2);
+			// free(tmp);
 		}
 
-		i++;
-	}
-
-	i = 0;
-	while (cmd->options && cmd->options[i])
-	{
-		printf("option : %s\n", cmd->options[i]);
-		i++;
-	}
-	i = 0;
-	while (cmd->arguments && cmd->arguments[i])
-	{
-		printf("argument : %s\n", cmd->arguments[i]);
 		i++;
 	}
 	return (cmd);
@@ -442,26 +465,44 @@ int	main(int argc, char *argv[])
 	char	*line;
 	t_cmd	*cmd;
 	int		i;
+
+	/*
 	// char	**exargs;
 	// **exargs = {"/", NULL};
 
 	// char	*exargs[] = {"/", NULL};
 
 	// execve("/bin/ls", exargs, NULL);
+	*/
 
 	while (write(1, "$ ", 2) && get_next_line(0, &line) >= 0)
 	{
 		// ft_treat_line(line);
+		// printf("%s\n", line);
+		// printf("h1\n");
 		cmd = ft_extract_data(line);
-		printf("cmd\t : %s\n", cmd->cmd);
+		printf("cmd %p\n", cmd);
+		if (cmd && cmd->arguments)
+			printf("cmd %p\n", cmd->arguments);
+		if (cmd && cmd->options)
+			printf("cmd %p\n", cmd->options);
 
+		i = 0;
+		while (cmd->options && cmd->options[i])
+			printf("option : %s\n", cmd->options[i++]);
+		// printf("h3\n");
+		i = 0;
+		while (cmd->arguments && cmd->arguments[i])
+			printf("argument : %s\n", cmd->arguments[i++]);
+		// printf("h4\n");
 
-		// for (int i=0; cmd->options[i]; i++)
-		// {
-		// 	printf("option : %s\n", cmd->options[i]);
-		// }
-
+		// malloc protection
+		free(cmd);
 		free(line);
 	}
+
+	// malloc protection
+	if (line)
+		free(line);
 	return (0);
 }
