@@ -3,7 +3,7 @@ builtin execve
 
 ----------------------------
 
-implement :
+implement : with no options or arguments except specified
 		echo -n
 		cd	(relative or absolute)
 		pwd

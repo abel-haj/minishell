@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int		ft_strcountch(const char *s, size_t n)
+int	ft_strcountch(const char *s, size_t n)
 {
 	size_t	i;
 	int		c;

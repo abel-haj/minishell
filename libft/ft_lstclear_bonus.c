@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abel-haj <abel-haj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abel-haj <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/06 06:50:13 by abel-haj          #+#    #+#             */
-/*   Updated: 2021/04/03 18:47:20 by abel-haj         ###   ########.fr       */
+/*   Updated: 2019/11/18 18:27:37 by abel-haj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void		ft_lstclear(t_list **lst, void (*del)(void *))
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	t_list *tmp;
-	t_list *l;
+	t_list	*tmp;
+	t_list	*l;
 
 	if (lst && del)
 	{
@@ -31,7 +31,7 @@ void		ft_lstclear(t_list **lst, void (*del)(void *))
 	}
 }
 
-void		ft_d(void *data)
+void	ft_d(void *data)
 {
 	if (data)
 		data = NULL;

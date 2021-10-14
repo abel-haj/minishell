@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static void		ft_split_incr(const char *s, size_t *i, char c, int equal_to)
+static void	ft_split_incr(const char *s, size_t *i, char c, int equal_to)
 {
 	if (equal_to)
 		while (s[*i] == c)
@@ -51,7 +51,7 @@ static size_t	ft_strclen(const char *s, char c)
 	return (i);
 }
 
-static char		**ft_freesplitted(char **s, size_t len)
+static char	**ft_freesplitted(char **s, size_t len)
 {
 	while (len + 1 > 0)
 	{
@@ -62,7 +62,7 @@ static char		**ft_freesplitted(char **s, size_t len)
 	return (NULL);
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	size_t	i;
 	size_t	j;

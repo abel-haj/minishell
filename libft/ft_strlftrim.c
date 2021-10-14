@@ -33,5 +33,5 @@ char	*ft_strlftrim(char const *s1, char const *set)
 			break ;
 		i++;
 	}
-	return (char *)(s1 + i);
+	return ((char *)(s1 + i));
 }

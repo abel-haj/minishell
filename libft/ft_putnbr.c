@@ -14,7 +14,7 @@
 
 void	ft_putnbr(int n)
 {
-	size_t result;
+	size_t	result;
 
 	result = 0;
 	if (n < 0)

@@ -12,9 +12,9 @@
 
 #include "libft.h"
 
-static	size_t	ft_intlen(int n)
+static size_t	ft_intlen(int n)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	if (n == 0)
@@ -40,7 +40,7 @@ static	char	*ft_itostr(char *dst, size_t n, size_t start, size_t len)
 	return (dst);
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char		*string_integer;
 	int			sign;

@@ -12,16 +12,16 @@
 
 #include "libft.h"
 
-char    *ft_strachr(char *s, int c)
+char	*ft_strachr(char *s, int c)
 {
-    size_t  i;
-    
-    i = 0;
-    while (s[i] && c)
-    {
-        if (s[i] == (unsigned char)c)
-            return (s + i + 1);
-        i++;
-    }
-    return (NULL);
+	size_t	i;
+
+	i = 0;
+	while (s[i] && c)
+	{
+		if (s[i] == (unsigned char)c)
+			return (s + i + 1);
+		i++;
+	}
+	return (NULL);
 }

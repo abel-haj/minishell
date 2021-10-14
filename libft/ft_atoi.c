@@ -12,7 +12,15 @@
 
 #include "libft.h"
 
-int		ft_atoi(const char *str)
+static int	ternary_norm(int cond, int a, int b)
+{
+	if (cond)
+		return (a);
+	else
+		return (b);
+}
+
+int	ft_atoi(const char *str)
 {
 	int				i;
 	int				sign;
@@ -25,7 +33,7 @@ int		ft_atoi(const char *str)
 		i++;
 	if (str[i] == 43 || str[i] == 45)
 	{
-		sign = (str[i] == 45) ? -1 : 1;
+		sign = ternary_norm(str[i] == 45, -1, 1);
 		i++;
 	}
 	while (str[i] != '\0' && (str[i] >= 48 && str[i] <= 57))

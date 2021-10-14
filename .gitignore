@@ -53,6 +53,3 @@ dkms.conf
 
 # Executable
 minishell
-
-# VSCode debug dir
-.vscode

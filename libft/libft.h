@@ -17,7 +17,7 @@
 # include <stddef.h>
 # include <unistd.h>
 
-typedef	struct	s_list
+typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
@@ -48,6 +48,7 @@ char			*ft_strachr(char *s, int c);
 char			*ft_strrchr(const char *s, int c);
 char			*ft_strnstr(const char *hay, const char *needl, size_t len);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
+int				ft_strcmp(const char *s1, const char *s2);
 size_t			ft_strlcpy(char *dst, const char *src, size_t size);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
 char			*ft_strdup(const char *s1);
