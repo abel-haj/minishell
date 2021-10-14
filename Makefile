@@ -8,7 +8,8 @@ SRCS	= main.c \
 
 OBJS	= $(SRCS:.c=.o)
 
-CFLAGS	= -Wall -Wextra -Werror -lreadline
+CFLAGS	= -Wall -Wextra # -Werror
+RFLAGS	= -lreadline
 DFLAGS	= -g -fsanitize=address
 
 all		: $(NAME)
@@ -17,7 +18,7 @@ $(NAME)	:
 	@make -C ./libft/
 	@make clean -C ./libft/
 
-	@gcc $(CFLAGS) $(DFLAGS) $(SRCS) ./libft/libft.a -o $(NAME) && echo "\033[1;37mCollecting sea shells...\033[0;38m"
+	@gcc $(CFLAGS) $(RFLAGS) $(DFLAGS) $(SRCS) ./libft/libft.a -o $(NAME) && echo "\033[1;37mCollecting sea shells...\033[0;38m"
 
 clean	:
 	rm -rf *.o
