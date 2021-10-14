@@ -3,26 +3,19 @@
 # define MINISHELL_PARSE_H
 
 /*
- * cmd[*1, *2, *3, NULL]
- * 
- * options
- * arguments
- * 
- * type :
+ * CMD[*1, *2, *3, NULL]
+ * TYPE :
  *   1 : redirection
  *   2 :
- * 
- * text :
+ * TEXT :
  *   command as it is
- * 
- * redir_before :
- * redir_after :
+ * REDIR_BEFORE :
+ * REDIR_AFTER :
  *   1 : <
  *   2 : >
  *   3 : <<
  *   4 : >>
- * 
- * is_builtin :
+ * IS_BUILTIN :
  *   0 OR 1
  */
 typedef struct s_cmd {
@@ -30,8 +23,8 @@ typedef struct s_cmd {
 	// char	**options;
 	// char	**arguments;
 	char	*text;
-	int		redir_before;
-	int		redir_after;
+	char	*redir_before;
+	char	*redir_after;
 	char	is_builtin;
 	int		error;
 }				t_cmd;
