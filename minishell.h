@@ -3,6 +3,8 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include "parse/minishell_parse.h"
+# include "execute/minishell_execute.h"
 // malloc, ...
 # include <stdlib.h>
 // write, execve, ...
@@ -16,16 +18,5 @@
 # include <readline/history.h>
 
 # include <dirent.h>
-
-// [*1, *2, *3, NULL]
-// 0 OR 1
-typedef struct s_cmd {
-	char		*cmd;
-	char		**options;
-	char		**arguments;
-	char		is_builtin;
-}				t_cmd;
-
-int		get_next_line(int fd, char **line);
 
 #endif
