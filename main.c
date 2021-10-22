@@ -13,6 +13,7 @@ int	main(void)
 		if (*line) {
 			add_history(line);
 			handle_line(line);
+			execute();
 		}
 
 		if (!ft_strncmp(line, "exit", 4))
