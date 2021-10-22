@@ -21,11 +21,11 @@ $(NAME)	:
 	@gcc $(CFLAGS) $(RFLAGS) $(DFLAGS) $(SRCS) ./libft/libft.a -o $(NAME) && echo "\033[1;37mCollecting sea shells...\033[0;38m"
 
 clean	:
-	rm -rf *.o
+	@/bin/rm -rf *.o a.out 2&> /dev/null
 	make clean -C ./libft
 
 fclean	: clean
-	rm -rf $(NAME)
+	@/bin/rm -rf $(NAME) $(NAME).dSYM 2&> /dev/null
 	make fclean -C ./libft
 
 re		: fclean all
