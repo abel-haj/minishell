@@ -99,6 +99,10 @@ void	test_execve(char *line)
 		wait(NULL);
 }
 
+/*
+ * 0	: Quotes are enclosed
+ * else	: Quotes are not enclosed
+ */
 int	check_quotes(char *str)
 {
 	size_t	i;
@@ -121,69 +125,64 @@ int	check_quotes(char *str)
 	return (quote);
 }
 
-char	*get_redirection(char *s, int *i)
+int	check_pipes(char *l)
 {
-	if (s[*i] == ';')
+	size_t	i;
+	int		quote;
+
+	i = -1;
+	quote = 0;
+	while (l[++i])
 	{
-		while (s[++(*i)] == ';')
-		return (ft_substr(s, 0, *i));
+		if (l[i] == '\'' && quote == 0)
+			quote = 1;
+		else if (l[i] == '"' && quote == 0)
+			quote = 2;
+		else if (l[i] == '\'' == quote == 1)
+			quote = 0;
+		else if (l[i] == '"' && quote == 2)
+			quote = 0;
+
+		if (l[i] == '|' && quote == 0) {
+			if (l[i + 1] == '|')
+				return (0);
+		}
 	}
-	if (s[*i] == '<')
-	{
-		while (s[++(*i)] == '<')
-		return (ft_substr(s, 0, *i));
-	}
-	if (s[*i] == '>')
-	{
-		while (s[++(*i)] == '>')
-		return (ft_substr(s, 0, *i));
-	}
-	if (s[*i] == '|')
-	{
-		while (s[++(*i)] == '|')
-		return (ft_substr(s, 0, *i));
-	}
+	return (1);
 }
 
 // TODO :
 	// new list n new cmd in while
-void	handle_line(char *line)
+t_lst_cmd	handle_line(char *line)
 {
 	size_t		i;
-	int		quote;
+	size_t		j;
 	size_t		start;
 	size_t		end;
-	t_cmd		cmd;
-	t_lst_cmd	*cmd_head;
-	t_lst_cmd	*commands;
+	size_t		quote;
+	t_cmd		*cmd;
+	t_lst_cmd	*lst_cmd;
+	t_lst_cmd	*lst_tmp;
+	t_lst_cmd	*head_cmd;
+
+	char	**cmds;
 
 	i = -1;
+	j = -1;
 	quote = 0;
 	start = 0;
+	end = 0;
 
-	commands = ft_lstnew(&cmd);
-	cmd_head = commands;
-
-	while (line[++i])
-	{
-		if (line[i] == '\'' && quote == 0)
-			quote = 1;
-		else if (line[i] == '"' && quote == 0)
-			quote = 2;
-		else if (line[i] == '\'' == quote == 1)
-			quote = 0;
-		else if (line[i] == '"' && quote == 2)
-			quote = 0;
-
-		if (line[i] == ';' || line[i] == '>' || line[i] == '<' || line[i] == '|')
-		{
-			// store whats before
-			if (i == 0)
-				cmd.text = ft_strdup("");
-			else
-				cmd.text = ft_substr(line, start, i - start);
-			// skip it
-			cmd.redir_after = get_redirection(line, &i);
-		}
-	}
+	check_pipes(line);
+	// check some errors
+	/*
+		||
+		<>
+		><
+		<<>
+		>><
+		<<<
+		>>>
+		$ [a-zA-Z][?]
+	*/
 }

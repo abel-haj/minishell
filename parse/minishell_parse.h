@@ -18,15 +18,36 @@
  * IS_BUILTIN :
  *   0 OR 1
  */
+/*
+
+cmd < 'pwd' > test.txt
+['-s', '-n']
+['string']
+
+echo -s -n string
+
+
+[NULL]
+['string', '-s', '-n']
+
+echo string -s -n
+
+
+echo string
+*/
+
+typedef struct s_mini_cmd {
+	char				*filename;
+	int					redir;
+	struct s_mini_cmd	*next;
+} t_mini_cmd;
+
 typedef struct s_cmd {
-	// char	*cmd;
-	// char	**options;
-	// char	**arguments;
-	char	*text;
-	char	*redir_before;
-	char	*redir_after;
-	char	is_builtin;
-	int		error;
+	char				*text;
+	char				*cmd;
+	char				**options;
+	char				is_builtin;
+	struct s_mini_cmd	*mini_cmd;
 }				t_cmd;
 
 typedef struct s_lst_cmd {
@@ -34,7 +55,7 @@ typedef struct s_lst_cmd {
 	struct s_lst_cmd	*next;
 }				t_lst_cmd;
 
-void			handle_line(char *s);
+t_lst_cmd		handle_line(char *s);
 void			ft_lstprint(t_lst_cmd *list);
 t_lst_cmd		*ft_lstnew(void *content);
 void			ft_lstadd_front(t_lst_cmd **alst, t_lst_cmd *new);
