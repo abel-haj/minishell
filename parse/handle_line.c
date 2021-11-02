@@ -151,29 +151,24 @@ int	check_pipes(char *l)
 	return (1);
 }
 
-// TODO :
-	// new list n new cmd in while
-t_lst_cmd	handle_line(char *line)
+int	check_redirections(char *s)
 {
-	size_t		i;
-	size_t		j;
-	size_t		start;
-	size_t		end;
-	size_t		quote;
-	t_cmd		*cmd;
-	t_lst_cmd	*lst_cmd;
-	t_lst_cmd	*lst_tmp;
-	t_lst_cmd	*head_cmd;
-
-	char	**cmds;
+	size_t	i;
+	size_t	j;
+	int		quote;
 
 	i = -1;
-	j = -1;
 	quote = 0;
-	start = 0;
-	end = 0;
-
-	check_pipes(line);
+	while (s[++i])
+	{
+		if (s[i] == '\'' && quote == 0)
+			quote = 1;
+		else if (s[i] == '"' && quote == 0)
+			quote = 2;
+		else if (s[i] == '\'' == quote == 1)
+			quote = 0;
+		else if (s[i] == '"' && quote == 2)
+			quote = 0;
 	// check some errors
 	/*
 		||
@@ -185,4 +180,75 @@ t_lst_cmd	handle_line(char *line)
 		>>>
 		$ [a-zA-Z][?]
 	*/
+		if (quote == 0)
+		{
+			if (s[i] == '>')
+			{
+				if (s[i + 1] == '<')
+					return (0);
+				if (s[i + 1] == '>')
+					if (s[i + 2] == '>')
+						return (0);
+			}
+			else if (s[i] == '<')
+			{
+				if (s[i + 1] == '>')
+					return (0);
+				if (s[i + 1] == '<')
+					if (s[i + 2] == '<')
+						return (0);
+			}
+			else if (s[i] == '$')
+			{
+				j = i;
+				while (s[j] && s[j] != ' ')
+				{
+					j++;
+				}
+				// if (s[i + 1] == '?')
+				// else if (ft_isalpha(s[i + 1])
+			}
+		}
+	}
+	return (1);
+}
+
+// TODO :
+	// new list n new cmd in while
+t_lst_cmd	handle_line(char *line)
+{
+	size_t		i;
+	size_t		j;
+	size_t		quote;
+	t_cmd		*cmd;
+	t_lst_cmd	*lst_cmd;
+	t_lst_cmd	*lst_tmp;
+	t_lst_cmd	*head_cmd;
+
+	char	**cmds;
+
+	i = -1;
+	j = -1;
+	quote = 0;
+	if (!check_quotes(line))
+	{
+		// ||
+		if (check_pipes(line))
+		{
+			if (check_redirections(line))
+			{
+				cmds = ft_split_wq(line, '|');
+				while (cmds[++i])
+				{
+					;
+				}
+			}
+			else
+				printf("minishell: syntax error");
+		}
+		else
+			printf("minishell: syntax error");
+	}
+	else
+		printf("minishell: forbidden error");
 }
