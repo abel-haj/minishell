@@ -21,6 +21,12 @@ int	ft_strcmp(const char *s1, const char *s2)
 	i = 0;
 	f_string = (unsigned char *)s1;
 	s_string = (unsigned char *)s2;
+	if (s1 && !s2)
+		return (1);
+	else if (!s1 && s2)
+		return (-1);
+	else if (!s1 && !s2)
+		return (0);
 	while (f_string[i] && s_string[i])
 	{
 		if (f_string[i] != s_string[i])
