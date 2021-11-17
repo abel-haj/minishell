@@ -49,6 +49,7 @@ typedef struct s_cmd {
 	char				is_builtin;
 	struct s_mini_cmd	*mini_cmd;
 	struct s_cmd		*next_cmd;
+	char				error;
 }				t_cmd;
 
 typedef struct s_lst_cmd {

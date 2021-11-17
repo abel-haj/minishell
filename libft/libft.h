@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abel-haj <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: houbeid <houbeid@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 00:09:02 by abel-haj          #+#    #+#             */
-/*   Updated: 2020/01/01 18:40:29 by abel-haj         ###   ########.fr       */
+/*   Updated: 2021/11/14 13:53:45 by houbeid          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <unistd.h>
+#include <stdio.h>
 
 typedef struct s_list
 {
@@ -68,4 +69,5 @@ void			ft_putchar_fd(char c, int fd);
 void			ft_putstr_fd(char *s, int fd);
 void			ft_putendl_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
+char			*ft_strjoin_char(char const *s1, char const *s2, char c);
 #endif
