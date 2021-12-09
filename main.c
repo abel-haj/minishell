@@ -1,31 +1,124 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: houbeid <houbeid@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/08 18:19:17 by abel-haj          #+#    #+#             */
+/*   Updated: 2021/12/09 04:36:03 by houbeid          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	main(int ac, char **argv, char **envp)
+void	handlsignal(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		g_global->sig_exdeja = 1;
+		if (g_global->child_ex == 1)
+			exit(0);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		if (g_global->her_ex == 1)
+			handlsignal_helper();
+		else
+		{
+			rl_redisplay();
+			g_global->error = "1";
+		}
+	}
+}
+
+void	free_global_mini(void)
+{
+	t_mini_cmd	*mini;
+
+	while (g_global->lst->mini_cmd)
+	{
+		mini = g_global->lst->mini_cmd;
+		free(g_global->lst->mini_cmd->filename);
+		g_global->lst->mini_cmd = g_global->lst->mini_cmd->next_mini;
+		free(mini);
+	}
+	if (g_global->pathname)
+	{
+		free(g_global->pathname);
+		g_global->pathname = NULL;
+	}
+	free(g_global->lst->options);
+}
+
+void	free_global(void)
+{
+	int			i;
+
+	if (g_global->lst)
+	{
+		if (g_global->lst->cmd)
+		{
+			free(g_global->lst->cmd);
+			g_global->lst->cmd = NULL;
+		}
+		if (g_global->lst->options)
+		{
+			i = 0;
+			while (g_global->lst->options[i])
+			{
+				free(g_global->lst->options[i]);
+				i++;
+			}
+		}
+		free_global_mini();
+		free(g_global->lst);
+		g_global->lst = NULL;
+	}
+}
+
+t_imp	*init_main(int ac, char **av, char **envp)
+{
+	ac = 0;
+	av = NULL;
+	g_global = pmalloc(sizeof(t_global));
+	g_global->lst = NULL;
+	g_global->pathname = NULL;
+	g_global->error = "0";
+	g_global->child_ex = 0;
+	g_global->her_ex = 0;
+	g_global->sig_ex = 0;
+	g_global->sig_exdeja = 0;
+	signal(SIGINT, handlsignal);
+	signal(SIGQUIT, SIG_IGN);
+	return (gere_exp(envp));
+}
+
+int	main(int ac, char **av, char **envp)
 {
 	char		*line;
-	struct imp	*imp;
-	struct imp	*imp_env;
+	char		*trimmd;
+	t_imp		*imp;
 
-	g_cmds = NULL;
-	imp = gere_exp(envp);
+	imp = init_main(ac, av, envp);
 	while (1)
 	{
 		line = readline("minishell% ");
-
-		// if line is not empty
-		// add it to history
-		if (*line && ft_strlen(ft_strtrim(line, " ")) > 0) {
-			add_history(line);
-			handle_line(line);
-			execute(&imp, envp);
-		}
-
-		if (!ft_strncmp(line, "exit", 4))
+		trimmd = ft_strtrim(line, " ");
+		if (!line)
 		{
-			free(line);
+			printf("exit\n");
 			exit(EXIT_SUCCESS);
 		}
-		free(line);
+		else if (*line && ft_strlen(trimmd) > 0)
+		{
+			add_history(line);
+			handle_line(line, imp);
+			execute(&imp);
+			free_global();
+			free(line);
+		}
+		free(trimmd);
 	}
 	return (0);
 }

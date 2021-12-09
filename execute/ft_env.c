@@ -1,20 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: houbeid <houbeid@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 15:11:53 by houbeid           #+#    #+#             */
+/*   Updated: 2021/12/05 15:52:49 by houbeid          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-void	print_env(struct imp **imp)
+void	print_env(t_imp **imp)
 {
-	struct imp *tmp;
+	t_imp	*tmp;
 
 	tmp = *imp;
-	/*while (tmp != NULL)
-	{
-		printf("%s\n", tmp->key);
-		tmp = tmp->next;
-	}*/
 	while (tmp != NULL)
 	{
 		if (tmp->egale == 1)
 		{
-			if(tmp->value != NULL)
+			if (tmp->value != NULL)
 			{
 				printf("%s", tmp->key);
 				printf ("=");

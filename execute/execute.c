@@ -1,33 +1,73 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: houbeid <houbeid@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/05 16:08:05 by houbeid           #+#    #+#             */
+/*   Updated: 2021/12/09 03:32:49 by houbeid          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-struct imp *init_options()
+int	typered_norm(int redir, char *filename, int ambig)
 {
-	struct imp *init;
-	struct imp *tmp;
-	int len;
-	int i;
+	int	fd;
+
+	fd = macro_red(redir, filename, ambig);
+	if (fd == 0)
+		return (0);
+	if (fd < 0)
+		return (fd);
+	return (fd);
+}
+
+void	macro_init_options(t_imp *tmp, int i, int j)
+{
+	char	*opt;
+	int		len;
+
+	len = 0;
+	while (g_global->lst->options[i][j] == '=')
+		j++;
+	opt = ft_strchr((g_global->lst->options[i] + j), '=');
+	if (opt)
+	{
+		len = opt - g_global->lst->options[i];
+		tmp->key = ft_substr_wrap(g_global->lst->options[i], 0, len);
+		if (opt[1] == '"' || opt[1] == '\'')
+			tmp->value = ft_substr_wrap(g_global->lst->options[i],
+					len + 1 + 1, ft_strlen(opt) - 1 - 2);
+		else
+			tmp->value = ft_substr_wrap(g_global->lst->options[i],
+					len + 1, ft_strlen(g_global->lst->options[i]));
+		tmp->egale = 1;
+	}
+	else
+	{
+		tmp->key = ft_strdup_wrap(g_global->lst->options[i]);
+		tmp->value = NULL;
+		tmp->egale = 0;
+	}
+}
+
+t_imp	*init_options(void)
+{
+	t_imp	*init;
+	t_imp	*tmp;
+	int		i;
 
 	i = 1;
-	len = 0;
-	init = malloc(sizeof(struct imp));
+	init = pmalloc(sizeof(t_imp));
 	tmp = init;
-	while (g_cmds->options[i])
+	while (g_global->lst->options[i])
 	{
-
-		tmp->next = malloc(sizeof(struct imp));
-		if (ft_strchr(g_cmds->options[i], '='))
-		{
-			len = ft_strchr(g_cmds->options[i], '=') - g_cmds->options[i];
-			tmp->key = ft_substr(g_cmds->options[i], 0, len);
-			tmp->value = ft_substr(g_cmds->options[i], len + 1, ft_strlen(g_cmds->options[i]));
-			tmp->egale = 1;
-		}
-		else
-		{
-			tmp->key = g_cmds->options[i];
-			tmp->value = NULL;
-			tmp->egale = 0;
-		}
+		macro_init_options(tmp, i, 0);
+		if (!g_global->lst->options[i + 1])
+			break ;
+		tmp->next = pmalloc(sizeof(t_imp));
 		tmp = tmp->next;
 		i++;
 	}
@@ -35,81 +75,20 @@ struct imp *init_options()
 	return (init);
 }
 
-struct imp **manages_options(struct imp **imp)
+void	execute(t_imp **imp)
 {
-	struct imp *tmp;
-	struct imp	*init;
-	struct imp	*tmp1;
-	struct imp *tmp2;
-	int 		i;
-	struct imp *new;
+	int	i;
 
-	
-	init = init_options();
-	tmp1 = init;
-	i = 0;
-
-	while (tmp1->next != NULL)
-	{ 
-		tmp = *imp; 
-		while (tmp != NULL && ft_strcmp(tmp1->key, tmp->key)){
-			tmp = tmp->next;
-			// printf("|%p| * |%s * %p|\n", tmp1->key, tmp->key, tmp->key);
-		}
-		if (tmp == NULL)
-		{
-			struct imp *t = *imp;
-			while (t->next)
-				t = t->next;
-			new = malloc(sizeof(struct imp));
-			new->key = tmp1->key;
-			new->value = tmp1->value;
-			if (tmp1->egale == 1)
-				new->egale = 1;
-			else
-				new->egale = 0;
-			new->next = NULL;
-			t->next = new;
-		}
-		else
-		{
-			if (tmp1->egale == 1)
-			{
-				tmp->key = tmp1->key;
-				tmp->value = tmp1->value;
-				tmp->egale = 1;
-			}
-		}
-		tmp1 = tmp1->next;
-	}
-	return (imp);
-}
-
-void	execute(struct imp **imp, char **envp)
-{
-	//printf("%d", g_cmds->is_builtin);
-	if (g_cmds->is_builtin)
+	if (!ft_strcmp(g_global->error, "0"))
 	{
-		if (!ft_strcmp(g_cmds->cmd, "export"))
+		if (g_global->lst->mini_cmd != NULL)
+			i = redirection(imp);
+		else if (g_global->lst->cmd)
 		{
-			if (g_cmds->options[1] != NULL)
-				imp = manages_options(imp);
+			if (g_global->lst->is_builtin == 1)
+				is_builtin(imp);
 			else
-				print_export(imp);
+				ft_execve(imp);
 		}
-		if (!ft_strcmp(g_cmds->cmd, "echo"))
-			impecho();
-		if (!ft_strcmp(g_cmds->cmd, "unset"))
-			ft_unset(imp);
-		if (!ft_strcmp(g_cmds->cmd, "cd"))
-			ft_cd(imp);
-		if (!ft_strcmp(g_cmds->cmd, "pwd"))
-			ft_pwd();
-		if(!ft_strcmp(g_cmds->cmd, "exit"))
-			ft_exit();
-		if(!ft_strcmp(g_cmds->cmd, "env"))
-			print_env(imp);
 	}
-	else
-		ft_execve(envp);
 }
