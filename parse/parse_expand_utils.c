@@ -86,6 +86,7 @@ char	*expand_it(char *s, t_imp *env, size_t size)
 		else
 			expand_repl_iter_macro(s, &res, &norm.i, &norm.j);
 	}
+	// sanitizer segv
 	res[norm.j] = '\0';
 	return (res);
 }
